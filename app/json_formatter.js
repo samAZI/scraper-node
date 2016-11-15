@@ -1,5 +1,4 @@
 const fs = require('fs')
-var _ = require('underscore');
 const PATH_JSON_EXPORT = 'misc/scraping_result.json';
 
 function JsonFormatter(code, name, price, trips, custom_prices) {

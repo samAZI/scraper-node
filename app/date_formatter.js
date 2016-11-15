@@ -1,4 +1,3 @@
-
 function DateFormatter() {}
 
 DateFormatter.day_array = new Array("Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre");
@@ -13,6 +12,12 @@ DateFormatter.formatWithTwoNumbers = function(number) {
     number = "0" + number;
   }
   return (number);
+}
+
+DateFormatter.formatHour = function(hour) {
+  hour = parseFloat(hour);
+  hour = hour.toString().replace(/\./, ":");
+  return(hour);
 }
 
 module.exports = DateFormatter;

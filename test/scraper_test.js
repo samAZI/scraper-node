@@ -1,4 +1,3 @@
-// var assert = require('assert');
 var Scraper = require('../app/scraper')
 var chai = require('chai');
 var assert = chai.assert;
@@ -9,23 +8,7 @@ const fs = require('fs');
 const EMPTY_STRING = ''
 const PATH_SAMPLE_TEST = './sample_page_test.html'
 
-function loadSampleHTML() {
-  fs.readFile(PATH_SAMPLE_TEST, 'utf-8', function (err, content) {
-    if (err) {
-      return EMPTY_STRING;
-    }
-    return "d";
-  });
-}
-
 describe('Scraper', function() {
-
-  var content = loadSampleHTML()
-  describe("loadSampleHTML()", function() {
-    it('load the sample html page', function() {
-      expect(content).to.not.equal(EMPTY_STRING);
-    });
-  })
 
   var scraper = new Scraper(content);
 

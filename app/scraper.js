@@ -1,18 +1,12 @@
 var cheerio = require('cheerio');
 var DateFormatter = require('./date_formatter')
+var _ = require('underscore');
+
 function Scraper(content) {
   this.$ = cheerio.load(content);
 }
 
-// function Scraper() {
-//   this.$ = ""
-// }
-//
-
-//*
-//*** INSTANCE METHODS
-//*
-
+// INSTANCE METHODS
 Scraper.prototype.getContent = function() {
   return (this.$);
 }
@@ -33,36 +27,6 @@ Scraper.prototype.getReservationPrice = function() {
   return price
 }
 
-Scraper.prototype.getTravelDate = function(index) {
-  var date_array = this.$('td[class*=product-travel-date]').eq(index).text().trim().split(' ');
-  var month_number = DateFormatter.convertMonthToNumber(date_array[2]);
-  var day_number = DateFormatter.formatWithTwoNumbers(date_array[1]);
-  var date_departure = "2016-" + month_number + "-"+ day_number +" 00:00:00.000Z";
-  return (date_departure);
-}
-
-// IL MANQUE LA DATE A RECUPERER
-Scraper.prototype.getTripDeparture = function(train_infos) {
-  var trip = new Object();
-  var trains = [new Object()];
-  var departure_time = train_infos.children().eq(1).text().replace(/h/,".");
-  trains[0].departureTime  = Scraper.formatHour(departure_time);
-  trains[0].departureStation = train_infos.children().eq(2).text().trim();
-  trains[0].type = train_infos.children().eq(3).text().trim();
-  trains[0].number = train_infos.children().eq(4).text().trim();
-  trip.type = train_infos.children().eq(0).text().trim();
-  trip.trains = trains
-  return trip;
-}
-
-Scraper.prototype.getTripArrival = function(train_infos) {
-  var train = new Object();
-  var arrival_time = train_infos.children().eq(0).text().replace(/h/, ".");
-  train.arrivalTime = Scraper.formatHour(arrival_time);
-  train.arrivalStation = train_infos.children().eq(1).text().trim();
-  return train
-}
-
 Scraper.prototype.getCustomPrices = function() {
   var array = new Array();
   var custom_price_1 = this.$('table[class*=product-header]>tbody>tr>td:last-child').eq(0).text().replace(/,/, ".");
@@ -75,34 +39,63 @@ Scraper.prototype.getCustomPrices = function() {
   return array;
 }
 
-// Scraper.prototype.getTrips = function() {
-//   this.$('table[class*=product-details]>tbody>tr').each(function(index, elem) {
-//     trips[index] = Scraper.getTripDeparture(elem);
-//
-//   });
-//   return;
-//   var trips = new Array();
-//   this.$('table[class*=product-details]>tbody>tr').each(function(index, elem) {
-//     if (index % 2) {
-//       arrivalInfos = Scraper.getTripArrival($(this));
-//       index = getEvenIndex(index);
-//       underscore.extend(trips[index].trains[0], arrivalInfos);
-//     } else {
-//       if (index > 0) { index = index / 2 }
-//       trips[index] = Scraper.getTripDeparture($(this));
-//     }
-//   });
-//   return trips
-// }
+Scraper.prototype.getTrips = function () {
+  var trips = new Array();
+  var total_trips = this.$('table[class*=product-details]>tbody>tr').length;
+  for (var index = 0; index < total_trips; index++) {
+    elem = this.$('table[class*=product-details]>tbody>tr').eq(index);
+    this.getTrip(index, elem, trips);
+  }
+  return trips
+}
 
-//*
-//*** CLASS METHODS
-//*
+Scraper.prototype.getTrip = function(index, elem, trips){
+  if (index % 2) {
+    arrivalInfos = Scraper.getTripArrival(elem);
+    index = Scraper.getEvenNumber(index);
+    _.extend(trips[index].trains[0], arrivalInfos);
+  }
+  else {
+    if (index > 0) { index = index / 2 }
+    trips[index] = Scraper.getTripDeparture(elem, index, this.getContent());
+  }
+}
 
-Scraper.formatHour = function(hour) {
-  hour = parseFloat(hour);
-  hour = hour.toString().replace(/\./, ":");
-  return(hour);
+// CLASS METHODS
+
+Scraper.getTripDeparture = function(train_infos, index, $) {
+  var trip = new Object();
+  var trains = [new Object()];
+  var departure_time = train_infos.children().eq(1).text().replace(/h/,".");
+  trains[0].departureTime  = DateFormatter.formatHour(departure_time);
+  trains[0].departureStation = train_infos.children().eq(2).text().trim();
+  trains[0].type = train_infos.children().eq(3).text().trim();
+  trains[0].number = train_infos.children().eq(4).text().trim();
+  trip.type = train_infos.children().eq(0).text().trim();
+  trip.date = Scraper.getTravelDate(index, $);
+  trip.trains = trains
+  return trip;
+}
+
+Scraper.getTripArrival = function(train_infos) {
+  var train = new Object();
+  var arrival_time = train_infos.children().eq(0).text().replace(/h/, ".");
+  train.arrivalTime = DateFormatter.formatHour(arrival_time);
+  train.arrivalStation = train_infos.children().eq(1).text().trim();
+  return train
+}
+
+Scraper.getTravelDate = function(index, $) {
+  var date_array = $('td[class*=product-travel-date]').eq(index).text().trim().split(' ');
+  var month_number = DateFormatter.convertMonthToNumber(date_array[2]);
+  var day_number = DateFormatter.formatWithTwoNumbers(date_array[1]);
+  var date_departure = "2016-" + month_number + "-"+ day_number +" 00:00:00.000Z";
+  return (date_departure);
+}
+
+Scraper.getEvenNumber = function(index) {
+  index = index == 0 ? index : ((index - 1) /2 );
+  return (index);
 }
 
 module.exports = Scraper;
