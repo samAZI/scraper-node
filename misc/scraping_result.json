@@ -1,0 +1,85 @@
+{
+    "status": "ok",
+    "result": {
+        "trips": [
+            {
+                "code": "SNIKXP",
+                "name": "dupont",
+                "details": {
+                    "price": 768.5,
+                    "roundTrips": [
+                        {
+                            "type": "Aller",
+                            "trains": [
+                                {
+                                    "departureTime": "16:57",
+                                    "departureStation": "PARIS GARE DE LYON",
+                                    "type": "TGV",
+                                    "number": "6687",
+                                    "arrivalTime": "18:56",
+                                    "arrivalStation": "LYON PART DIEU"
+                                }
+                            ],
+                            "date": "2016-09-02 00:00:00.000Z"
+                        },
+                        {
+                            "type": "Retour",
+                            "trains": [
+                                {
+                                    "departureTime": "13:05",
+                                    "departureStation": "LYON PART DIEU",
+                                    "type": "TGV",
+                                    "number": "6618",
+                                    "arrivalTime": "15:01",
+                                    "arrivalStation": "PARIS GARE DE LYON"
+                                }
+                            ],
+                            "date": "2016-09-04 00:00:00.000Z"
+                        },
+                        {
+                            "type": "Aller",
+                            "trains": [
+                                {
+                                    "departureTime": "16:37",
+                                    "departureStation": "PARIS GARE DE LYON",
+                                    "type": "TGV",
+                                    "number": "6121",
+                                    "arrivalTime": "19:17",
+                                    "arrivalStation": "AVIGNON TGV"
+                                }
+                            ],
+                            "date": "2016-09-15 00:00:00.000Z"
+                        },
+                        {
+                            "type": "Retour",
+                            "trains": [
+                                {
+                                    "departureTime": "15:42",
+                                    "departureStation": "AVIGNON TGV",
+                                    "type": "TGV",
+                                    "number": "6122",
+                                    "arrivalTime": "18:3",
+                                    "arrivalStation": "PARIS GARE DE LYON"
+                                }
+                            ],
+                            "date": "2016-09-18 00:00:00.000Z"
+                        }
+                    ]
+                }
+            }
+        ],
+        "custom": {
+            "prices": [
+                {
+                    "value": 315.5
+                },
+                {
+                    "value": 378
+                },
+                {
+                    "value": 75
+                }
+            ]
+        }
+    }
+}
