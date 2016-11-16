@@ -7,7 +7,7 @@ Ce projet a pour but de récupérer des données issues d'un mail au format HTML
 #####Chemin du fichier json : misc/scraping_result.json 
 
 ###Installer les packages node:
-`npm install cheerio`
+`npm install`
 
 ###Lancer l'application
 `npm start`
